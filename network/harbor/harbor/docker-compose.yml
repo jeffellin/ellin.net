@@ -214,7 +214,7 @@ services:
         tag: "redis"
   proxy:
     image: goharbor/nginx-photon:v1.10.6
-    container_name: nginx
+    container_name: nginx_harbor
     restart: always
     cap_drop:
       - ALL
@@ -230,8 +230,8 @@ services:
       - harbor
     dns_search: .
     ports:
-      - 80:8080
-      - 443:8443
+      - 192.168.1.80:80:8080
+      - 192.168.1.80:443:8443
     depends_on:
       - registry
       - core
