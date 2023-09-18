@@ -3,6 +3,11 @@ variable datacenter_name {
   default = "Datacenter"
   description = "The name of the vSphere Datacenter into which resources will be created."
 }
+variable disk_size {
+  type        = string
+  default = "16"
+  description = "Disk Size"
+}
 variable cluster_name {
   type        = string
   default = "lab"

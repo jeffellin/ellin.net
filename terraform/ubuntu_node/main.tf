@@ -31,7 +31,7 @@ lifecycle {
 
   disk {
     label            = "disk0"
-    size             = 16
+    size             = var.disk_size
     controller_type  = "scsi"
   }
 

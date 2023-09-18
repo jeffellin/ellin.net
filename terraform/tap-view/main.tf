@@ -1,10 +1,9 @@
 module "ubuntu_node" {
   source = "../ubuntu_node"
-  hostname="tap-build"
+  hostname="tap-view"
   num_cpus=8
   memory=16384
-  datastore_name="ESX2-2TB-SSD"
-  disk_size="128"
+  disk_size=60
   execution_cmd=lookup(tanzu-mission-control_cluster.attach_cluster_without_apply.status,"execution_cmd","unkown")
 }
 
@@ -28,7 +27,7 @@ provider "tanzu-mission-control" {
 resource "tanzu-mission-control_cluster" "attach_cluster_without_apply" {
   management_cluster_name = "attached"         # Default: attached
   provisioner_name        = "attached"         # Default: attached
-  name                    = "tap-build" # Required
+  name                    = "tap-view" # Required
 
   meta {
     description = "create attach cluster from terraform"
@@ -53,20 +52,21 @@ terraform {
 }
 # terraform {
 #  backend "s3" {
-#..u    bucket = "terraform"
-#key = "terraform.tfstate"
-#endpoint = "https://api.minio.lab.ellin.net"
-#insecure = true
-#access_key="cS5fJPr4WH5NRkc4bYYz"
-#secret_key="5hRGkGfK023mYJgMyOYeCik4jScNHsvYArLzE5rK"
+#    bucket = "terraform"
+#    key = "terraform.tfstate"
 #
-#region = "main"
-#skip_credentials_validation = true
-#skip_metadata_api_check = true
-#skip_region_validation = true
-#force_path_style = true
+#    endpoint = "https://192.168.1.94:9000"
+#
+#    access_key="cS5fJPr4WH5NRkc4bYYz"
+#    secret_key="5hRGkGfK023mYJgMyOYeCik4jScNHsvYArLzE5rK"
+
+ #   region = "main"
+ #   skip_credentials_validation = true
+ #   skip_metadata_api_check = true
+ #   skip_region_validation = true
+ #   force_path_style = true
+ # }
 #}
-#
 
 variable "vsphere_server" {
   type = string
