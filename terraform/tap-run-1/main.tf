@@ -1,8 +1,10 @@
 module "ubuntu_node" {
   source = "../ubuntu_node"
   hostname="tap-run-1"
-  num_cpus=8
-  memory=16384
+  num_cpus=10
+  disk_size=64
+  memory=32768
+  datastore_name="ESX2-2TB-SSD"
   execution_cmd=lookup(tanzu-mission-control_cluster.attach_cluster_without_apply.status,"execution_cmd","unkown")
 }
 

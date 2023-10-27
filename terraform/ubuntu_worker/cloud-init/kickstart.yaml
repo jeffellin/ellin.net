@@ -1,0 +1,55 @@
+#cloud-config 
+users:
+  - default #Define a default user
+system_info: 
+  default_user:
+    name: ubuntu
+    groups: sudo, users, adm
+    ssh_import_id:
+      - gh:jeffellin
+    lock_passwd: false
+    shell: /bin/bash
+    sudo: ["ALL=(ALL) NOPASSWD:ALL"]
+#disable_root: false #Enable root acce
+ssh_pwauth: yes #Use pwd to access (otherwise follow official doc to use ssh-keys)
+random_seed:
+    file: /dev/urandom
+    command: ["pollinate", "-r", "-s", "https://entropy.ubuntu.com"]
+    command_required: true
+package_upgrade: true
+packages:
+  - docker
+  - docker.io
+  - build-essential
+write_files:
+- path: /tmp/brew.sh
+  content: |
+    #!/bin/bash -x
+    export NONINTERACTIVE=1
+    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+    ssh-import-id-gh jeffellin
+- path: /tmp/wso.sh
+  content: |
+    #!/bin/bash -x
+    chmod a+x /tmp/brew.sh
+    su ubuntu -c /tmp/brew.sh
+    (echo; echo 'eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"') >> /home/ubuntu/.profile
+    echo ${num_cpus} >> /tmp/test.txt
+    # curl -sfL https://get.k3s.io | INSTALL_K3S_EXEC="--disable=servicelb --disable=traefik" sh -s -
+    # mkdir -p /home/ubuntu/.kube
+    # cp /etc/rancher/k3s/k3s.yaml /home/ubuntu/.kube/config
+    # chown $(id ubuntu -u):$(id ubuntu -g) /home/ubuntu/.kube/config
+    # chmod 600 /home/ubuntu/.kube/config
+    # (echo; echo 'export KUBECONFIG=~/.kube/config') >> /home/ubuntu/.profile
+    touch /tmp/finished-user-data
+runcmd:
+  - bash -x /tmp/wso.sh
+
+# power_state:
+#  timeout: 30
+#  mode: reboot
+# apt:
+#   sources:
+#     docker.list:
+#       source: deb [arch=amd64] https://download.docker.com/linux/ubuntu $RELEASE stable
+#       keyid: 9DC858229FC7DD38854AE2D88D81803C0EBFCD88
